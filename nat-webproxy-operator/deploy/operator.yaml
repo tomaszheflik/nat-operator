@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nat-webproxy-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nat-webproxy-operator
+  template:
+    metadata:
+      labels:
+        name: nat-webproxy-operator
+    spec:
+      serviceAccountName: nat-webproxy-operator
+      containers:
+        - name: nat-webproxy-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - nat-webproxy-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "nat-webproxy-operator"
